@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="styles.css">
+		<meta
+	</head>
+	<body>
+		<header class="head-bar">
+			<div class="m"><a href="https://medium.com">M</a></div>
+			<div class="title">
+				<a href="https://medium.com/react-tutorials"><p>PUBLISHED IN</p>
+				<p>REACT TUTORIALS</p></a>
+			</div>
+			<div class="sign-in">Sign in / Sign up</div>
+			<a href="https://medium.com/search"><img class="search" src="https://cdn2.iconfinder.com/data/icons/picons-essentials/57/search-512.png"></a>
+		</header>
+
+		<img class="top-image" src="https://d262ilb51hltx0.cloudfront.net/max/2000/1*bs9PbxDndAW7mmqve3EQ-w.jpeg">
+
+		<div class="content">
+			<h1>React Properties</h1>
+			<p><a href="https://medium.com/react-tutorials/react-components-828c397e3dc8">Last time</a> we looked at components, which are the building blocks of any React-powered interface. Today we will continue to explore them, with a focus on how to customise them.</p><p>There are a few ways in which React components can be customised, but we&#39;re going pay particular attention to properties. Properties are to React components what attributes are to HTML elements. In fact, their most basic use is in the form of attributes, in JSX.</p>
+				<div class="note"><p>You can find the accompanying source-code, for this tutorial, at: <a href="https://github.com/formativ/tutorial-react-properties">https://github.com/formativ/tutorial-react-properties</a>.</p>
+				<p>Please post any errors you find, or questions you have as comments on this article or as issues on GitHub.</p>
+				<p>Thanks to <a href="https://twitter.com/cpojer">Christoph Pojer</a> and <a href="https://twitter.com/zpao">Paul O&#39;Shannessy</a> for helping to improve this!</p>
+				</div>
+			<h2>Defining Properties</h2>
+			<p>If you&#39;re familiar with HTML (and you really should be for this tutorial to make sense) then you know that HTML elements can be customised by the attribute values contained in the opening tag.</p>
+			<p>Given a simple component:</p>
+			<xmp class="code">
+/**
+ * @jsx React.DOM
+ */
+
+var InterfaceComponent = React.createClass({
+  render : function() {
+    return <div>hello world!</div>;
+  }
+});
+
+React.renderComponent(
+  <InterfaceComponent />,
+  document.body
+);
+			</xmp>
+			<p>We can change the behaviour of this component by altering the contents of the <b>render</b>() method. What if we wanted the behaviour to changed, based on external information? We can use properties!</p>
+			<xmp class="code">
+/**
+ * @jsx React.DOM
+ */
+  
+var InterfaceComponent = React.createClass({
+  render : function() {
+    return <div>hello {this.props.name}!</div>;
+  }
+});
+
+React.renderComponent(
+  <InterfaceComponent name="chris" />,
+  document.body
+);
+			</xmp>
+			<p>I wasn&#39;t kidding when I said that properties were like attributes. In JSX they can be defined as attributes. Let&#39;s break this example down:</p>
+			<xmp class="code">
+React.renderComponent(
+  <InterfaceComponent name="chris" />,
+  document.body
+);
+			</xmp>
+			<p>When we provide a name attribute (and value) this gets passed along to the component. If you come from a history of Object Oriented Programming languages, you may thing that these properties are passed to a constructor and that you need to manage them from there. Don&#39;t fall into this trap!</p>
+			<p>They are actually passed to a constructor, but you should never try to override this behaviour with your own constructor functionality. You should only use these values from <b>this.props:</b></p>
+			<xmp class="code">
+var InterfaceComponent = React.createClass({
+  render : function() {
+    return <div>hello {this.props.name}!</div>;
+  }
+});
+			</xmp>
+			<p>You may be wondering what the curly braces are for. They drop out of the HTML-like syntax into JavaScript evaluation mode. We&#39;ll see how that can be used to great effect in future tutorials, but what&#39;s important for now is that defined properties can be accessed via <b>this.props</b>.</p>
+			<div class="note"><p>You can also define hyphen-separated property names. You will have to use array access to pull them out of <b>this.props</b> though.</p></div>
+			<h2>Supported Elements</h2>
+			<p>So far we&#39;ve used div, span and our own components. It&#39;s helpful to know which HTML elements have been implemented as React components (and are therefore instantiable with JSX element syntax).</p>
+			<p>Here&#39;s a list of supported HTML elements:</p>
+			<xmp class="code">
+a abbr address area article aside audio b base bdi bdo big 
+blockquote body br button canvas caption cite code col colgroup
+data datalist dd del details dfn div dl dt em embed fieldset 
+figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hr html 
+i iframe img input ins kbd keygen label legend li link main map 
+mark menu menuitem meta meter nav noscript object ol optgroup 
+option output p param pre progress q rp rt ruby s samp script 
+section select small source span strong style sub summary sup table 
+tbody td textarea tfoot th thead time title tr track u ul var video 
+wbr
+			</xmp>
+			<h2>Supported Attributes</h2>
+			<p>As you might expect, most of the attributes that can be found in regular HTML are supported in JSX:</p>
+			<xmp class="code">
+accept accessKey action allowFullScreen allowTransparency alt 
+autoCapitalize autoComplete autoFocus autoPlay cellPadding 
+cellSpacing charSet checked className colSpan content 
+contentEditable contextMenu controls data dateTime dir disabled 
+draggable encType form frameBorder height hidden href htmlFor 
+httpEquiv icon id label lang list loop max maxLength method min 
+multiple name pattern placeholder poster preload radioGroup 
+readOnly rel required role rowSpan scrollLeft scrollTop selected 
+size spellCheck src step style tabIndex target title type value 
+width wmode
+			</xmp>
+			<p>You may notice, from this list, that attributes usually specified in hyphen-case (HTML) are supported in camelCase (JSX). That&#39;s not to say that you can only use camelCase for your own attributes. It&#39;s simply a design decision which allows for <b>this.props.</b>* access.</p>
+			<p>There are a few exceptions to the way HTML attributes usually work (other than the case difference we&#39;ve already covered):</p>
+			<ol>
+				<li>The style attribute doesn&#39;t accept strings. You can specify a JavaScript object with keys that correspond to the camelCase CSS property names. We&#39;ll see an example of this shortly.</li>
+				<li>Events can be assigned (following the W3C specification) using attributes like <b>onClick</b> and <b>onChange</b>.</li>
+				<li>the <b>onChange</b> event is triggered when the element&#39;s value changes. This differs from some browsers which need the element to blur before <b>onChange</b> is triggered.</li>
+			</ol>
+			<p>There are other differences, but we&#39;ll look at them as we continue in the series.</p>
+			<div class="note">You can find out more support details at: <br>http://facebook.github.io/react/docs/tags-and-attributes.html.</div>
+			<h2>Validating Properties</h2>
+			<p>There&#39;s a handy property you can set (on new component definitions) which will allow you to control the presence and/or type of properties:</p>
+			<xmp class="code">
+/**
+ * @jsx React.DOM
+ */
+  
+var InterfaceComponent = React.createClass({
+  propTypes: {
+    name    : React.PropTypes.string,
+    visible : React.PropTypes.bool.isRequired,
+    before  : function(props, propName, componentName) {
+      if (!(propName in props)) {
+        throw new Error("before must be set.");
+      }
+
+      var now = new Date();
+
+      if (now.getTime() >= props[propName].getTime()) {
+        throw new Error("before must be set to a later date.");
+      }
+    }
+  },
+  render : function() {
+    return <div>hello {this.props.name}!</div>;
+  }
+});
+
+React.renderComponent(
+  <InterfaceComponent
+    name="chris"
+    visible={true}
+    before={new Date(Date.now() + 1000)} />,
+  document.body
+);
+			</xmp>
+			<p>You can validate the type of properties by providing any of the types in <b>React.PropTypes.</b>*. To make a property required, append <b>.isRequired</b> to the type. You can also define a callback function in which you perform specific validation against the provided properties. In this cause I check that the before property is provided and that it is a date beyond the current date/time.</p>
+			<div class="note"><p>You can also use <b>React.PropTypes.instanceOf(SomeClass)</b> to compare a property against a defined class, but you shouldn&#39;t need to use this as much as the standard data types and callback functions.<p>You can find out more about property type validation at: <br><a href="http://facebook.github.io/react/docs/reusable-components.html.">http://facebook.github.io/react/docs/reusable-components.html.</a></p></div>
+			<h2>Setting Property Defaults</h2>
+			<p>Let&#39;s look at how to set default property values, that can be overridden by properties passed in initialisation:</p>
+			<xmp class="code">
+/**
+ * @jsx React.DOM
+ */
+  
+var InterfaceComponent = React.createClass({
+  getDefaultProps : function() {
+    return {
+      "firstName" : "chris",
+      "lastName"  : "pitt"
+    };
+  },
+  render : function() {
+    return <div>
+      hello {this.props.firstName + " " + this.props.lastName}
+    </div>;
+  }
+});
+
+React.renderComponent(
+  <InterfaceComponent />,
+  document.body
+);
+			</xmp>
+			<p>The <b>getDefaultProps</b>() method must return an object. The contents of that object are up to you, but they will get overwritten by properties provided in initialisation.</p>
+			<div class="note">You can find out more about default properties at: <br><a href="http://facebook.github.io/react/docs/component-specs.html#getdefaultprops">http://facebook.github.io/react/docs/component-specs.html#getdefaultprops.</a></div>
+			<h2>Transferring Properties</h2>
+			<p>When you are working with multiple components, in a hierarchy, there may be occasion for sending properties down the structural tree. This has the benefit of reducing code duplication&#46;&#46;&#46;</p>
+			<xmp class="code">
+/**
+ * @jsx React.DOM
+ */
+
+var ChildComponent = React.createClass({
+  render : function() {
+    return <div style={{
+      color      : this.props.color,
+      background : this.props.background
+    }}>
+      I am {this.props.color}
+    </div>
+  }
+});
+  
+var ParentComponent = React.createClass({
+  render : function() {
+    return this.transferPropsTo(
+      <ChildComponent background={null} />
+    );
+  }
+});
+
+React.renderComponent(
+  <ParentComponent color="blue" background="red" />,
+  document.body
+);
+		</xmp>
+		<p>In this example we can see how the <b>transferPropsTo</b>() method will pass all the properties of a parent component to a child component. That is unless we explicitly set the value of a child component&#39;s property, as we did for background.</p>
+		<div class="note">Be careful when using this approach to passing properties around. You may inadvertently create a dependency between your parent and child components. It&#39;s usually better just to explicit pass properties when instantiating child components.</div>
+		<h2>Conclusion</h2>
+		<p>Properties are what turn dull components into configurable interface elements. They are key to component reuse and help immensely with nested component design. We&#39;ve seen most of how properties can be used, but there&#39;s still loads more to components. Keep reading.</p>
+		<p>If you enjoyed this tutorial; it would be helpful if you could click the <b>Recommend</b> button and share it with other developers.</p>
+
+		<div class="bottom">
+			<div class="recommend"><img src="http://files.softicons.com/download/holidays-icons/heart-icons-by-gavin-elliott/png/48/FreshGreen.png"> Recommend</div>
+			<div class="bookmark"></div>
+			<div class="share"></div>
+			<div class="arrow"></div>
+			<div class="recommended"></div>
+			<div class="published"></div>
+			<div class="written"></div>
+		</div>
+		</div>
+	</body>
+</html>
